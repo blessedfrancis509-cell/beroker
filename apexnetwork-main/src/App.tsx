@@ -576,7 +576,7 @@ const DashboardView = ({ setActiveTab, user, assets, onCloseTrade }: {
 // --- View: Markets (Trading Terminal) ---
 
 const MarketsView = ({ selectedAsset, setSelectedAsset, assets, onPlaceTrade, user }: {
-  selectedAsset: Asset,
+  selectedAsset: Asset | null,
   setSelectedAsset: (a: Asset) => void,
   assets: Asset[],
   onPlaceTrade: (type: 'BUY' | 'SELL', lot: number) => void,
@@ -585,6 +585,10 @@ const MarketsView = ({ selectedAsset, setSelectedAsset, assets, onPlaceTrade, us
   const [lot, setLot] = useState('100');
   const [timeframe, setTimeframe] = useState('15m');
   const [isAssetMenuOpen, setIsAssetMenuOpen] = useState(false);
+
+  if (!selectedAsset) {
+    return <div className="p-8 text-zinc-500 text-sm font-bold uppercase tracking-widest">Loading market data...</div>;
+  }
 
   const activePositions = (user.trades || []).filter(t => t.status === 'OPEN' && t.symbol === selectedAsset.symbol);
 
@@ -2236,7 +2240,7 @@ export default function App() {
     { id: 1, sender: 'system', text: 'Protocol established. How can we assist your operations today?', time: '09:00', userName: 'System', userId: 'sys' }
   ]);
 
-  const selectedAsset = assets.find(a => a.id === selectedAssetId) || assets[0];
+  const selectedAsset = (assets.find(a => a.id === selectedAssetId) || assets[0]) || null;
 
   // Simulation of market movements (Sync with Server)
   React.useEffect(() => {
@@ -2246,6 +2250,9 @@ export default function App() {
       try {
         const data = await ApiService.getAssets();
         setAssets(data);
+        if (data.length > 0 && !selectedAssetId) {
+          setSelectedAssetId(data[0].id);
+        }
       } catch (err) {
         console.error("Asset sync failed", err);
       }
