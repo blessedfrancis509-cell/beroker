@@ -60,7 +60,7 @@ import {
   ReferenceLine
 } from 'recharts';
 import { cn } from './lib/utils';
-import { MOCK_ASSETS, MOCK_USER, MOCK_PLATFORM_USERS, MOCK_PLATFORM_STATS, Asset, Trade } from './mockData';
+import { Asset, Trade, UserState, EMPTY_USER } from './mockData';
 import AuthPage from './components/AuthPage';
 
 // Custom Candlestick Component for professional clear rendering
@@ -386,7 +386,7 @@ const CommandRail = ({ activeTab, setActiveTab, isAdmin }: { activeTab: string, 
 
 const DashboardView = ({ setActiveTab, user, assets, onCloseTrade }: {
   setActiveTab: (t: string) => void,
-  user: typeof MOCK_USER,
+  user: UserState,
   assets: Asset[],
   onCloseTrade: (id: string) => void
 }) => {
@@ -580,7 +580,7 @@ const MarketsView = ({ selectedAsset, setSelectedAsset, assets, onPlaceTrade, us
   setSelectedAsset: (a: Asset) => void,
   assets: Asset[],
   onPlaceTrade: (type: 'BUY' | 'SELL', lot: number) => void,
-  user: typeof MOCK_USER
+  user: UserState
 }) => {
   const [lot, setLot] = useState('100');
   const [timeframe, setTimeframe] = useState('15m');
@@ -922,7 +922,7 @@ const NewsView = () => {
 
 // --- View: History ---
 
-const HistoryView = ({ user }: { user: typeof MOCK_USER }) => {
+const HistoryView = ({ user }: { user: UserState }) => {
   const closedTrades = (user.trades || []).filter(t => t.status === 'CLOSED');
   const totalPL = closedTrades.reduce((sum, t) => sum + t.profit, 0);
 
@@ -1023,12 +1023,12 @@ const AdminView = ({
 }: {
   assets: Asset[],
   setAssets: React.Dispatch<React.SetStateAction<Asset[]>>,
-  platformUsers: typeof MOCK_PLATFORM_USERS,
-  setPlatformUsers: React.Dispatch<React.SetStateAction<typeof MOCK_PLATFORM_USERS>>,
+  platformUsers: any[],
+  setPlatformUsers: React.Dispatch<React.SetStateAction<any[]>>,
   paymentSettings: any,
   setPaymentSettings: React.Dispatch<React.SetStateAction<any>>,
-  currentUser: typeof MOCK_USER,
-  setCurrentUser: React.Dispatch<React.SetStateAction<typeof MOCK_USER>>,
+  currentUser: UserState,
+  setCurrentUser: React.Dispatch<React.SetStateAction<UserState>>,
   messages: any[],
   onReply: (text: string) => void
 }) => {
@@ -1117,10 +1117,10 @@ const AdminView = ({
         <div className="space-y-6 animate-in fade-in duration-500">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: 'Total Volume Index', value: MOCK_PLATFORM_STATS.totalVolume, icon: BarChart3, color: 'text-indigo-400' },
+              { label: 'Total Volume Index', value: '$0.00', icon: BarChart3, color: 'text-indigo-400' },
               { label: 'Network Operators', value: platformUsers.length, icon: Activity, color: 'text-emerald-400' },
-              { label: 'Core System Load', value: MOCK_PLATFORM_STATS.serverLoad, icon: Zap, color: 'text-amber-400' },
-              { label: 'Daily Revenue Pool', value: MOCK_PLATFORM_STATS.revenue24h, icon: Banknote, color: 'text-rose-400' },
+              { label: 'Core System Load', value: '—', icon: Zap, color: 'text-amber-400' },
+              { label: 'Daily Revenue Pool', value: '$0.00', icon: Banknote, color: 'text-rose-400' },
             ].map((stat) => (
               <div key={`stat-${stat.label}`} className="glass-panel p-5 rounded-3xl flex flex-col gap-3">
                 <div className="flex items-center justify-between">
@@ -1734,7 +1734,7 @@ const AdminView = ({
   );
 };
 
-const ProfileView = ({ user, setUser }: { user: typeof MOCK_USER, setUser: React.Dispatch<React.SetStateAction<typeof MOCK_USER>> }) => {
+const ProfileView = ({ user, setUser }: { user: UserState, setUser: React.Dispatch<React.SetStateAction<UserState>> }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(user.name);
   const [editedBio, setEditedBio] = useState('Senior Protocol Analyst. Specializing in high-frequency algorithmic derivatives and cross-chain liquidation sequences.');
@@ -1862,7 +1862,7 @@ const ProfileView = ({ user, setUser }: { user: typeof MOCK_USER, setUser: React
 
 // --- View: Account ---
 
-const AccountView = ({ user, setUser, paymentSettings }: { user: typeof MOCK_USER, setUser: React.Dispatch<React.SetStateAction<typeof MOCK_USER>>, paymentSettings: any }) => {
+const AccountView = ({ user, setUser, paymentSettings }: { user: UserState, setUser: React.Dispatch<React.SetStateAction<UserState>>, paymentSettings: any }) => {
   const [activeSubTab, setActiveSubTab] = useState<'deposit' | 'withdraw' | 'security'>('deposit');
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [selectedWithdrawMethod, setSelectedWithdrawMethod] = useState<string | null>(null);
@@ -2207,12 +2207,9 @@ export default function App() {
     document.documentElement.classList.add(theme);
     localStorage.setItem('apex_theme', theme);
   }, [theme]);
-  const [assets, setAssets] = useState<Asset[]>(MOCK_ASSETS);
-  const [user, setUser] = useState(MOCK_USER);
-  const [platformUsers, setPlatformUsers] = useState(MOCK_PLATFORM_USERS.map(u => ({
-    ...u,
-    cards: u.id === 'u1' ? [{ id: 'c1', brand: 'Visa', last4: '8421', expiry: '12/26' }] : []
-  })));
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [user, setUser] = useState(EMPTY_USER);
+  const [platformUsers, setPlatformUsers] = useState<any[]>([]);
   const [paymentSettings, setPaymentSettings] = useState({
     cryptoAddresses: [
       { id: '1', label: 'BTC Settlement Ledger', value: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh', type: 'BTC' },
@@ -2232,7 +2229,7 @@ export default function App() {
     depositEnabled: true,
     whatsappUrl: 'https://wa.me/19453879820'
   });
-  const [selectedAssetId, setSelectedAssetId] = useState<string>(MOCK_ASSETS[0].id);
+  const [selectedAssetId, setSelectedAssetId] = useState<string>('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState<any[]>([
@@ -2286,7 +2283,7 @@ export default function App() {
       if (storedSession) {
         try {
           const userData = await ApiService.getMe();
-          setUser({ ...MOCK_USER, ...userData });
+          setUser({ ...EMPTY_USER, ...userData });
           setIsAuthenticated(true);
         } catch (err) {
           ApiService.clearSession();
@@ -2407,7 +2404,7 @@ export default function App() {
     try {
       // Use passed user if available, fallback to getMe
       const userData = data.user || await ApiService.getMe();
-      setUser({ ...MOCK_USER, ...userData, trades: userData.trades || [] });
+      setUser({ ...EMPTY_USER, ...userData, trades: userData.trades || [] });
       setIsAuthenticated(true);
     } catch (err) {
       console.error("Auth sync failed", err);
