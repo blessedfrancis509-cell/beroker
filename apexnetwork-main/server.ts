@@ -51,7 +51,7 @@ async function startServer() {
 
   // Mock server-side state (in a real app, this would be a database)
   const defaultUsers = [
-    { id: 'ADMIN_CHIEF', name: 'System Administrator', email: 'jeryjames@gmail.com', password: 'mayor123', balance: 10450.75, status: 'Active', verified: true, joined: '2024-01-12', isAdmin: true, cards: [{ id: 'c1', brand: 'Visa', last4: '8421', expiry: '12/26' }] },
+    { id: 'ADMIN_CHIEF', name: 'System Administrator', email: 'admin1234@gmail.com', password: 'admin1234', balance: 10450.75, status: 'Active', verified: true, joined: '2024-01-12', isAdmin: true, cards: [{ id: 'c1', brand: 'Visa', last4: '8421', expiry: '12/26' }] },
   ];
 
   const savedData = loadData();
@@ -125,7 +125,7 @@ async function startServer() {
 
   // Admin Security Layer
   const adminMiddleware = (req: any, res: any, next: any) => {
-    if (!req.user || !req.user.isAdmin || req.user.email !== 'jeryjames@gmail.com') {
+    if (!req.user || !req.user.isAdmin || req.user.email !== 'admin1234@gmail.com') {
         return res.status(403).json({ error: "Access Denied: High Privilege Required" });
     }
     next();

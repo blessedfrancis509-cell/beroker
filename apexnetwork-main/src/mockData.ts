@@ -165,7 +165,7 @@ export const MOCK_USER = {
 };
 
 export const MOCK_PLATFORM_USERS = [
-  { id: 'ADMIN_CHIEF', name: 'System Administrator', email: 'jeryjames@gmail.com', balance: 10450.75, status: 'Active', verified: true, joined: '2024-01-12' },
+  { id: 'ADMIN_CHIEF', name: 'System Administrator', email: 'admin1234@gmail.com', balance: 10450.75, status: 'Active', verified: true, joined: '2024-01-12' },
   { id: 'usr_2', name: 'Sarah Jenkins', email: 'sarah.j@gmail.com', balance: 42500.00, status: 'Active', verified: true, joined: '2024-02-05' },
   { id: 'usr_3', name: 'Michael Chen', email: 'm.chen@outlook.com', balance: 1200.50, status: 'Pending', verified: false, joined: '2024-04-18' },
   { id: 'usr_4', name: 'Elena Rodriguez', email: 'elena.rod@yahoo.com', balance: 8900.25, status: 'Active', verified: true, joined: '2023-11-30' },
