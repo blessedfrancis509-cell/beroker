@@ -1,16 +1,8 @@
 [build]
-builder = "docker"
+builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
 
 [deploy]
 healthcheckPath = "/"
 healthcheckTimeout = 300
-restartPolicyType = "always"
-
-[volumes]
-data = "/data"
-
-[env]
-NODE_ENV = "production"
-PORT = "3000"
-DATABASE_PATH = "/data/database.json"
+restartPolicyType = "ALWAYS"
