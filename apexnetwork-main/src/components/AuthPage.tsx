@@ -41,9 +41,10 @@ export default function AuthPage({ onLogin }: { onLogin: (data: { name?: string,
   const handleClaimBonus = async () => {
     setLoading(true);
     try {
-        await ApiService.claimBonus();
+        const result = await ApiService.claimBonus();
+        const updatedUser = { ...tempUserData, balance: result.balance };
         setShowBonusPopup(false);
-        onLogin({ name: tempUserData.name, email: tempUserData.email, isRegistration: true, bonusClaimed: true, user: tempUserData });
+        onLogin({ name: tempUserData.name, email: tempUserData.email, isRegistration: true, bonusClaimed: true, user: updatedUser });
     } catch (err: any) {
         alert("Bonus extraction failed: " + err.message);
     } finally {

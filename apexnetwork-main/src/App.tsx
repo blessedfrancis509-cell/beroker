@@ -40,6 +40,7 @@ import {
   Camera,
   MessageSquare,
   Send,
+  Phone,
   MessageCircle,
   ShieldAlert,
   LogOut
@@ -333,9 +334,15 @@ const TechnicalHeader = ({ user, theme, setTheme, setActiveTab, onMenuToggle }: 
         >
           <div className="hidden sm:flex flex-col items-end">
             <span className="text-[10px] font-bold text-[var(--text-primary)] leading-none group-hover:text-indigo-500 transition-colors uppercase italic">{user.name.split(' ')[0]}</span>
-            <span className="text-[8px] font-black text-indigo-500 uppercase tracking-widest mt-0.5">Admin</span>
+            <span className="text-[8px] font-black text-indigo-500 uppercase tracking-widest mt-0.5">{user.isAdmin ? 'Admin' : 'Trader'}</span>
           </div>
-          <img src={user.avatar} alt="Avatar" className="w-7 h-7 md:w-8 md:h-8 rounded border border-[var(--panel-border)] group-hover:border-indigo-500 transition-all" />
+          {user.avatar ? (
+            <img src={user.avatar} alt="Avatar" className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-[var(--panel-border)] group-hover:border-indigo-500 transition-all object-cover" />
+          ) : (
+            <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-indigo-600 flex items-center justify-center text-[10px] font-black text-white border border-[var(--panel-border)] group-hover:border-indigo-500 transition-all">
+              {(user.name || '?').charAt(0).toUpperCase()}
+            </div>
+          )}
         </div>
       </div>
     </header>
@@ -1741,20 +1748,28 @@ const AdminView = ({
 const ProfileView = ({ user, setUser }: { user: UserState, setUser: React.Dispatch<React.SetStateAction<UserState>> }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(user.name);
-  const [editedBio, setEditedBio] = useState('Senior Protocol Analyst. Specializing in high-frequency algorithmic derivatives and cross-chain liquidation sequences.');
 
   const handleSave = () => {
     setUser(prev => ({ ...prev, name: editedName }));
     setIsEditing(false);
-    alert('Profile protocol updated and synchronized with central node.');
   };
+
+  const initials = user.name
+    ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : '?';
 
   return (
     <div className="p-4 md:p-8 space-y-8 animate-in fade-in duration-500 max-w-[1200px] mx-auto overflow-y-auto h-full pb-32 no-scrollbar">
       <div className="flex flex-col md:flex-row items-center gap-8 pb-8 border-b border-[var(--panel-border)]">
         <div className="relative group">
           <div className="absolute -inset-1 blur-2xl bg-indigo-500/30 group-hover:bg-indigo-500/50 transition-all opacity-0 group-hover:opacity-100" />
-          <img src={user.avatar} alt="Profile" className="relative w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] border-4 border-[var(--panel-border)] shadow-2xl object-cover" />
+          {user.avatar ? (
+            <img src={user.avatar} alt="Profile" className="relative w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] border-4 border-[var(--panel-border)] shadow-2xl object-cover" />
+          ) : (
+            <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] border-4 border-[var(--panel-border)] shadow-2xl bg-indigo-600 flex items-center justify-center">
+              <span className="text-5xl md:text-6xl font-black text-white">{initials}</span>
+            </div>
+          )}
           <button className="absolute bottom-2 right-2 p-3 bg-indigo-600 text-white rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all">
             <Camera className="w-5 h-5" />
           </button>
@@ -1763,7 +1778,7 @@ const ProfileView = ({ user, setUser }: { user: UserState, setUser: React.Dispat
         <div className="flex-1 text-center md:text-left space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-600/10 border border-indigo-600/30 rounded-full">
             <ShieldCheck className="w-3 h-3 text-indigo-500" />
-            <span className="text-[9px] font-black text-indigo-500 uppercase tracking-widest">Verified Institutional Operator</span>
+            <span className="text-[9px] font-black text-indigo-500 uppercase tracking-widest">{user.verified ? 'Verified' : 'Unverified'} Institutional Operator</span>
           </div>
 
           {isEditing ? (
@@ -1773,12 +1788,6 @@ const ProfileView = ({ user, setUser }: { user: UserState, setUser: React.Dispat
                 onChange={(e) => setEditedName(e.target.value)}
                 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] italic tracking-tighter uppercase bg-transparent border-b border-indigo-500 max-w-full focus:outline-none"
               />
-              <textarea
-                value={editedBio}
-                onChange={(e) => setEditedBio(e.target.value)}
-                className="w-full bg-[var(--background)] border border-[var(--panel-border)] rounded-xl p-4 text-[var(--text-secondary)] text-sm focus:outline-none focus:ring-1 focus:ring-indigo-600"
-                rows={3}
-              />
               <div className="flex gap-2 justify-center md:justify-start">
                 <button onClick={handleSave} className="px-6 py-2 bg-indigo-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-indigo-500 transition-all">Save Changes</button>
                 <button onClick={() => setIsEditing(false)} className="px-6 py-2 bg-[var(--panel-border)] text-[var(--text-secondary)] rounded-xl text-xs font-black uppercase tracking-widest hover:text-[var(--text-primary)] transition-all">Cancel</button>
@@ -1786,16 +1795,20 @@ const ProfileView = ({ user, setUser }: { user: UserState, setUser: React.Dispat
             </div>
           ) : (
             <>
-              <h1 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] italic tracking-tighter uppercase">{user.name}</h1>
-              <p className="text-[var(--text-secondary)] font-medium max-w-xl mx-auto md:mx-0">{editedBio}</p>
+              <h1 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] italic tracking-tighter uppercase">{user.name || 'Unnamed Operator'}</h1>
+              <p className="text-[var(--text-secondary)] font-medium max-w-xl mx-auto md:mx-0">{user.email}</p>
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
                 <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                  <User className="w-4 h-4" />
+                  <span className="text-xs font-bold uppercase tracking-widest">ID: {user.id || '—'}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                   <Globe className="w-4 h-4" />
-                  <span className="text-xs font-bold uppercase tracking-widest">Network: Node_01</span>
+                  <span className="text-xs font-bold uppercase tracking-widest">{user.country || 'N/A'}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                   <Clock className="w-4 h-4" />
-                  <span className="text-xs font-bold uppercase tracking-widest">Joined: Q1 2024</span>
+                  <span className="text-xs font-bold uppercase tracking-widest">Joined: {user.joined || '—'}</span>
                 </div>
                 <button onClick={() => setIsEditing(true)} className="text-xs font-black text-indigo-500 uppercase tracking-widest hover:text-indigo-400 transition-colors ml-2 underline underline-offset-4">Edit Profile</button>
               </div>
@@ -1807,56 +1820,76 @@ const ProfileView = ({ user, setUser }: { user: UserState, setUser: React.Dispat
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="terminal-panel p-6 rounded-3xl space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="terminal-label">Operational Core</h3>
-            <Activity className="w-4 h-4 text-indigo-500" />
+            <h3 className="terminal-label">Account Summary</h3>
+            <Wallet className="w-4 h-4 text-indigo-500" />
           </div>
           <div className="space-y-4">
             <div className="flex justify-between items-center px-1">
-              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase">Response Latency</span>
-              <span className="text-sm font-mono font-black text-emerald-500">12ms</span>
-            </div>
-            <div className="w-full h-1 bg-[var(--panel-border)] rounded-full overflow-hidden">
-              <div className="w-[95%] h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase">Balance</span>
+              <span className="text-sm font-mono font-black text-emerald-400">${user.balance.toLocaleString()}</span>
             </div>
             <div className="flex justify-between items-center px-1">
-              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase">Signal Integrity</span>
-              <span className="text-sm font-mono font-black text-indigo-400">99.9%</span>
+              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase">Equity</span>
+              <span className="text-sm font-mono font-black text-[var(--text-primary)]">${user.equity.toLocaleString()}</span>
             </div>
-            <div className="w-full h-1 bg-[var(--panel-border)] rounded-full overflow-hidden">
-              <div className="w-[99%] h-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
+            <div className="flex justify-between items-center px-1">
+              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase">Free Margin</span>
+              <span className="text-sm font-mono font-black text-indigo-400">${user.freeMargin.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between items-center px-1">
+              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase">Open Trades</span>
+              <span className="text-sm font-mono font-black text-[var(--text-primary)]">{(user.trades || []).filter(t => t.status === 'OPEN').length}</span>
             </div>
           </div>
         </div>
 
         <div className="terminal-panel p-6 rounded-3xl space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="terminal-label">Security Protocol</h3>
+            <h3 className="terminal-label">Account Status</h3>
             <ShieldCheck className="w-4 h-4 text-emerald-500" />
           </div>
           <div className="space-y-3">
             <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--background)] border border-[var(--panel-border)]">
+              <div className={`w-2 h-2 rounded-full ${user.status === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+              <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">Status: {user.status || 'Active'}</span>
+            </div>
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--background)] border border-[var(--panel-border)]">
+              <div className={`w-2 h-2 rounded-full ${user.verified ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+              <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">Verification: {user.verified ? 'Complete' : 'Pending'}</span>
+            </div>
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--background)] border border-[var(--panel-border)]">
               <div className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">2FA Matrix Active</span>
+              <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">2FA Security Active</span>
             </div>
             <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--background)] border border-[var(--panel-border)]">
               <div className="w-2 h-2 rounded-full bg-emerald-500" />
               <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">IP Whitelisting Enabled</span>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--background)] border border-[var(--panel-border)]">
-              <div className="w-2 h-2 rounded-full bg-amber-500" />
-              <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">Hardware Key Ready</span>
-            </div>
           </div>
         </div>
 
         <div className="terminal-panel p-6 rounded-3xl space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="terminal-label">Bio-Metric Sync</h3>
-            <Zap className="w-4 h-4 text-amber-500" />
+            <h3 className="terminal-label">Contact Info</h3>
+            <Phone className="w-4 h-4 text-amber-500" />
           </div>
-          <div className="flex flex-col items-center justify-center h-full pb-6 text-center">
-            <div className="w-16 h-16 rounded-full border-4 border-[var(--panel-border)] border-t-indigo-500 animate-spin mb-4" />
-            <span className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-[.3em]">Synchronizing Neuro-Link</span>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center px-1">
+              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase">Email</span>
+              <span className="text-sm font-mono text-[var(--text-primary)]">{user.email || '—'}</span>
+            </div>
+            <div className="flex justify-between items-center px-1">
+              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase">Phone</span>
+              <span className="text-sm font-mono text-[var(--text-primary)]">{user.phone || '—'}</span>
+            </div>
+            <div className="flex justify-between items-center px-1">
+              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase">Country</span>
+              <span className="text-sm font-mono text-[var(--text-primary)]">{user.country || '—'}</span>
+            </div>
+            <div className="flex justify-between items-center px-1">
+              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase">Role</span>
+              <span className="text-sm font-mono text-indigo-400">{user.isAdmin ? 'Administrator' : 'Trader'}</span>
+            </div>
           </div>
         </div>
       </div>

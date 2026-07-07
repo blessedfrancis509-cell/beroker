@@ -32,6 +32,7 @@ export interface Trade {
 export interface UserState {
   id: string;
   name: string;
+  email: string;
   avatar: string;
   balance: number;
   equity: number;
@@ -39,6 +40,11 @@ export interface UserState {
   freeMargin: number;
   marginLevel: number;
   isAdmin: boolean;
+  status: string;
+  verified: boolean;
+  joined: string;
+  phone: string;
+  country: string;
   cards: { id: string; brand: string; last4: string; expiry: string; }[];
   portfolio: PortfolioItem[];
   trades: Trade[];
@@ -47,6 +53,7 @@ export interface UserState {
 export const EMPTY_USER: UserState = {
   id: '',
   name: '',
+  email: '',
   avatar: '',
   balance: 0,
   equity: 0,
@@ -54,6 +61,11 @@ export const EMPTY_USER: UserState = {
   freeMargin: 0,
   marginLevel: 0,
   isAdmin: false,
+  status: '',
+  verified: false,
+  joined: '',
+  phone: '',
+  country: '',
   cards: [],
   portfolio: [],
   trades: []
