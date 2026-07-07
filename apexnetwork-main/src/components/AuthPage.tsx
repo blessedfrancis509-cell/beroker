@@ -15,6 +15,7 @@ export default function AuthPage({ onLogin }: { onLogin: (data: { name?: string,
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [country, setCountry] = useState('');
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -176,9 +177,37 @@ export default function AuthPage({ onLogin }: { onLogin: (data: { name?: string,
               </div>
             </div>
 
+            {!isLogin && (
+              <div className="flex items-start gap-3 px-1">
+                <button
+                  type="button"
+                  onClick={() => setAgreeToTerms(!agreeToTerms)}
+                  className={`w-5 h-5 rounded border-2 mt-0.5 shrink-0 flex items-center justify-center transition-all ${
+                    agreeToTerms ? 'bg-indigo-600 border-indigo-600' : 'border-[var(--panel-border)] hover:border-indigo-500'
+                  }`}
+                >
+                  {agreeToTerms && (
+                    <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </button>
+                <span className="text-[10px] font-bold text-[var(--text-secondary)] leading-relaxed">
+                  I agree to the{' '}
+                  <button type="button" className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2">
+                    Terms & Conditions
+                  </button>{' '}
+                  and{' '}
+                  <button type="button" className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2">
+                    Privacy Policy
+                  </button>
+                </span>
+              </div>
+            )}
+
             <button 
               type="submit" 
-              disabled={loading}
+              disabled={loading || (!isLogin && !agreeToTerms)}
               className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/50 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 group transition-all shadow-xl shadow-indigo-600/20 active:scale-[0.98]"
             >
               {loading ? (
@@ -244,7 +273,7 @@ export default function AuthPage({ onLogin }: { onLogin: (data: { name?: string,
                  <p className="text-[10px] text-indigo-500 font-black uppercase mt-1">Operational Liquidity</p>
               </div>
 
-              <button 
+               <button 
                 onClick={handleClaimBonus}
                 disabled={loading}
                 className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-2xl shadow-indigo-600/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
