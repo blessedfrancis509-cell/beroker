@@ -9,6 +9,7 @@ export interface Asset {
   color: string;
   sparkline: { time: string; value: number; open: number; high: number; low: number; close: number; }[];
   trend?: 'RANDOM' | 'PUMP' | 'DUMP' | 'STABLE';
+  trendRate?: number;
 }
 
 export interface PortfolioItem {

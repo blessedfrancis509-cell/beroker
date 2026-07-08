@@ -869,12 +869,20 @@ const SupportChat = ({ isOpen, onClose, messages, onSendMessage }: { isOpen: boo
 // --- View: News ---
 
 const NewsView = () => {
+  const [selectedArticle, setSelectedArticle] = useState<any>(null);
   const news = [
-    { id: 1, title: "Federal Reserve hints at interest rate cuts in upcoming Q3 meeting", source: "Market Watch", time: "12m ago", impact: "High" },
-    { id: 2, title: "EUR/USD breaks key resistance level at 1.0850 amid dollar weakness", source: "FX Street", time: "45m ago", impact: "Medium" },
-    { id: 3, title: "Gold prices hit all-time high as safe-haven demand surges globally", source: "Bloomberg", time: "2h ago", impact: "High" },
-    { id: 4, title: "BoE Governor Bailey speaks on inflation targets and monetary policy", source: "Reuters", time: "3h ago", impact: "High" },
-    { id: 5, title: "Nikkei 225 slides as Yen intervention fears grow in Tokyo", source: "Nikkei Asia", time: "5h ago", impact: "Medium" }
+    { id: 1, title: "Federal Reserve hints at interest rate cuts in upcoming Q3 meeting", source: "Market Watch", time: "12m ago", impact: "High", content: "The Federal Reserve has signaled a potential shift in monetary policy as inflation continues to moderate. Federal Reserve Chair Jerome Powell indicated that the central bank is considering rate cuts in the upcoming Q3 meeting, citing improved economic conditions and cooling inflation data. Market analysts expect a 25 basis point cut as the most likely scenario." },
+    { id: 2, title: "EUR/USD breaks key resistance level at 1.0850 amid dollar weakness", source: "FX Street", time: "45m ago", impact: "Medium", content: "The EUR/USD pair surged past the critical 1.0850 resistance level during today's trading session, driven by broad US dollar weakness. The move was supported by better-than-expected Eurozone industrial production data and growing expectations that the ECB will maintain its current policy stance." },
+    { id: 3, title: "Gold prices hit all-time high as safe-haven demand surges globally", source: "Bloomberg", time: "2h ago", impact: "High", content: "Gold prices reached a new all-time high today, crossing the $2,400 mark as geopolitical tensions and economic uncertainty drove investors toward safe-haven assets. Analysts cite weakening US dollar, falling bond yields, and central bank buying as key catalysts for the rally." },
+    { id: 4, title: "BoE Governor Bailey speaks on inflation targets and monetary policy", source: "Reuters", time: "3h ago", impact: "High", content: "Bank of England Governor Andrew Bailey delivered a comprehensive speech on the UK's inflation outlook and monetary policy trajectory. He emphasized that while inflation has fallen significantly, the BoE remains vigilant and will continue to assess data before making any rate decisions." },
+    { id: 5, title: "Nikkei 225 slides as Yen intervention fears grow in Tokyo", source: "Nikkei Asia", time: "5h ago", impact: "Medium", content: "Japan's Nikkei 225 index fell sharply today amid growing speculation that Japanese authorities may intervene in the currency markets to support the yen. Traders are closely watching for any signs of intervention as USD/JPY approaches the 152 level." },
+    { id: 6, title: "OPEC+ maintains production cuts amid global demand concerns", source: "Reuters", time: "6h ago", impact: "High", content: "OPEC+ has decided to maintain its current production cuts through the end of the year, citing ongoing uncertainty about global oil demand. The decision was widely expected by markets, with crude oil prices remaining relatively stable following the announcement." },
+    { id: 7, title: "S&P 500 hits new record high as tech stocks rally", source: "CNBC", time: "7h ago", impact: "Medium", content: "The S&P 500 index reached a new all-time high today, driven by a broad rally in technology stocks. Nvidia, Microsoft, and Apple were among the top performers as investors remain optimistic about AI-driven growth prospects." },
+    { id: 8, title: "Bitcoin volatility spikes as SEC deadline approaches", source: "CoinDesk", time: "8h ago", impact: "High", content: "Bitcoin prices experienced increased volatility today as the market awaits a key SEC decision on multiple spot Bitcoin ETF applications. Trading volumes surged as institutional investors position themselves ahead of the regulatory announcement." },
+    { id: 9, title: "European Central Bank holds rates steady at 4.5%", source: "Bloomberg", time: "9h ago", impact: "High", content: "The European Central Bank maintained its key interest rate at 4.5% today, in line with market expectations. ECB President Christine Lagarde indicated that the bank is taking a data-dependent approach and will carefully monitor economic indicators before making any adjustments." },
+    { id: 10, title: "US Dollar Index drops to three-month low on weak jobs data", source: "FX Street", time: "10h ago", impact: "Medium", content: "The US Dollar Index extended its decline to a three-month low following worse-than-expected employment data. Non-farm payrolls came in significantly below forecasts, raising expectations that the Fed may need to cut rates sooner rather than later." },
+    { id: 11, title: "China's GDP growth beats expectations at 5.3%", source: "Reuters", time: "11h ago", impact: "Medium", content: "China's economy grew at a faster-than-expected pace in the first quarter, with GDP expanding 5.3% year-on-year. The data provides some relief to policymakers who have been implementing various stimulus measures to support economic recovery." },
+    { id: 12, title: "Wheat futures surge as weather concerns hit global supply", source: "Bloomberg", time: "12h ago", impact: "Low", content: "Wheat futures prices jumped sharply today as adverse weather conditions in major producing regions raised concerns about global supply. Drought conditions in parts of the US and excessive rainfall in Europe have impacted crop yields." },
   ];
 
   return (
@@ -886,16 +894,18 @@ const NewsView = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
           {news.map((item) => (
-            <div key={item.id} className="glass-panel p-6 rounded-3xl hover:bg-indigo-600/5 transition-all border group cursor-pointer">
+            <div key={item.id} onClick={() => setSelectedArticle(item)} className="glass-panel p-6 rounded-3xl hover:bg-indigo-600/5 transition-all border group cursor-pointer">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-3">
                   <div className={cn(
                     "px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest border",
-                    item.impact === 'High' ? "bg-rose-500/10 text-rose-500 border-rose-500/20" : "bg-indigo-500/10 text-indigo-500 border-indigo-500/20"
+                    item.impact === 'High' ? "bg-rose-500/10 text-rose-500 border-rose-500/20" :
+                    item.impact === 'Medium' ? "bg-indigo-500/10 text-indigo-500 border-indigo-500/20" :
+                    "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
                   )}>
                     {item.impact} Impact
                   </div>
-                  <span className="text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-widest">{item.source} • {item.time}</span>
+                  <span className="text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-widest">{item.source} &bull; {item.time}</span>
                 </div>
                 <ArrowRight className="w-4 h-4 text-[var(--text-secondary)] group-hover:text-indigo-500 group-hover:translate-x-1 transition-all" />
               </div>
@@ -911,6 +921,7 @@ const NewsView = () => {
                 { event: "USD CPI m/m", time: "Today 15:30", forecast: "0.4%", prev: "0.3%" },
                 { event: "GBP GDP q/q", time: "Tomorrow 09:00", forecast: "0.1%", prev: "0.0%" },
                 { event: "EUR ECB Press Conf", time: "Thu 14:45", forecast: "--", prev: "--" },
+                { event: "JPY Interest Rate", time: "Fri 03:00", forecast: "0.10%", prev: "0.10%" },
               ].map((cal, i) => (
                 <div key={i} className="flex flex-col gap-1 pb-3 border-b border-white/5">
                   <div className="flex justify-between font-bold text-[var(--text-secondary)]">
@@ -925,8 +936,69 @@ const NewsView = () => {
               ))}
             </div>
           </div>
+          <div className="glass-panel p-6 rounded-3xl bg-emerald-600/5 border-emerald-600/10">
+            <h4 className="text-emerald-400 font-black uppercase tracking-widest text-[10px] mb-4">Market Sentiment</h4>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] font-bold uppercase text-zinc-500">Bullish</span>
+                <span className="text-[10px] font-black text-emerald-500">62%</span>
+              </div>
+              <div className="w-full h-2 bg-[var(--background)] rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-emerald-500 to-indigo-500 rounded-full" style={{ width: '62%' }} />
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] font-bold uppercase text-zinc-500">Bearish</span>
+                <span className="text-[10px] font-black text-rose-500">38%</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Article Detail Modal */}
+      <AnimatePresence>
+        {selectedArticle && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="w-full max-w-2xl bg-[var(--background)] border border-[var(--panel-border)] rounded-[2.5rem] shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden"
+            >
+              <div className="p-8 space-y-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest border",
+                      selectedArticle.impact === 'High' ? "bg-rose-500/10 text-rose-500 border-rose-500/20" :
+                      selectedArticle.impact === 'Medium' ? "bg-indigo-500/10 text-indigo-500 border-indigo-500/20" :
+                      "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                    )}>
+                      {selectedArticle.impact} Impact
+                    </div>
+                    <span className="text-[10px] text-[var(--text-secondary)] font-bold uppercase tracking-widest">{selectedArticle.source} &bull; {selectedArticle.time}</span>
+                  </div>
+                  <button onClick={() => setSelectedArticle(null)} className="p-3 hover:bg-[var(--panel-bg)] rounded-2xl transition-colors">
+                    <X className="w-5 h-5 text-[var(--text-secondary)]" />
+                  </button>
+                </div>
+                <h2 className="text-2xl font-black text-[var(--text-primary)] leading-tight">{selectedArticle.title}</h2>
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{selectedArticle.content}</p>
+                <div className="flex gap-4 pt-4 border-t border-[var(--panel-border)]">
+                  <button onClick={() => setSelectedArticle(null)} className="px-8 py-3 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-indigo-500 transition-all">
+                    Close Article
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -1041,7 +1113,7 @@ const AdminView = ({
   currentUser: UserState,
   setCurrentUser: React.Dispatch<React.SetStateAction<UserState>>,
   messages: any[],
-  onReply: (text: string) => void
+  onReply: (text: string) => Promise<void> | void
 }) => {
   const [adminSubTab, setAdminSubTab] = useState<'monitor' | 'investors' | 'markets' | 'config' | 'cs'>('monitor');
   const [searchUser, setSearchUser] = useState('');
@@ -1080,9 +1152,9 @@ const AdminView = ({
     }
   };
 
-  const handleSetTrend = async (assetId: string, trend: Asset['trend']) => {
+  const handleSetTrend = async (assetId: string, trend: Asset['trend'], trendRate?: number) => {
     try {
-      const updatedAsset = await ApiService.setTrend(assetId, trend || 'RANDOM');
+      const updatedAsset = await ApiService.setTrend(assetId, trend || 'RANDOM', trendRate);
       setAssets(prev => prev.map(a => a.id === assetId ? updatedAsset : a));
     } catch (err) {
       alert("Trend protocol command rejected");
@@ -1213,16 +1285,17 @@ const AdminView = ({
                       <span className={cn(
                         "px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest border",
                         u.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                          u.status === 'Pending' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                            'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                          u.status === 'Suspended' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
+                          u.status === 'Flagged' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                            'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
                       )}>
-                        {u.status}
+                        {u.status || 'Active'}
                       </span>
                     </td>
                     <td className="px-4 py-6">
                       <div className="flex items-center gap-2">
-                        <div className={cn("w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]", u.verified ? "bg-emerald-500 shadow-emerald-500/50" : "bg-rose-500 shadow-rose-500/50")} />
-                        <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-tighter">{u.verified ? 'Verified' : 'Flagged'}</span>
+                        <div className={cn("w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]", u.verified ? "bg-emerald-500 shadow-emerald-500/50" : "bg-amber-500 shadow-amber-500/50")} />
+                        <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-tighter">{u.verified ? 'Verified' : 'Pending'}</span>
                       </div>
                     </td>
                     <td className="px-6 py-6 text-right">
@@ -1275,12 +1348,52 @@ const AdminView = ({
                       <div className="p-6 rounded-3xl bg-[var(--panel-bg)] border border-[var(--panel-border)] space-y-4">
                         <div className="flex items-center gap-3">
                           <CreditCard className="w-4 h-4 text-indigo-500" />
-                          <h4 className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">Registered Payment Instruments</h4>
+                          <h4 className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">Account Controls</h4>
                         </div>
 
-                        {/* Card management removed per request */}
-                        <div className="p-8 text-center border-2 border-dashed border-[var(--panel-border)] rounded-3xl">
-                          <span className="text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-widest">Card processing disabled</span>
+                        <div className="grid grid-cols-1 gap-3">
+                          <div className="flex gap-2">
+                            {['Active', 'Suspended', 'Flagged'].map((st) => (
+                              <button
+                                key={st}
+                                onClick={async () => {
+                                  try {
+                                    const updated = await ApiService.updateUserStatus(viewingUser.id, st);
+                                    setViewingUser(updated);
+                                    setPlatformUsers((prev: any[]) => prev.map((u: any) => u.id === updated.id ? updated : u));
+                                  } catch (e) { alert("Status update failed"); }
+                                }}
+                                className={cn(
+                                  "flex-1 py-3 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all border",
+                                  viewingUser.status === st
+                                    ? st === 'Active' ? 'bg-emerald-600 text-white border-emerald-500' :
+                                      st === 'Suspended' ? 'bg-rose-600 text-white border-rose-500' :
+                                      'bg-amber-600 text-white border-amber-500'
+                                    : 'bg-[var(--background)] text-[var(--text-secondary)] border-[var(--panel-border)] hover:border-white/20'
+                                )}
+                              >
+                                {st}
+                              </button>
+                            ))}
+                          </div>
+                          <div className="flex items-center gap-2 p-3 rounded-xl bg-[var(--background)] border border-[var(--panel-border)]">
+                            <span className="text-[9px] font-black text-[var(--text-secondary)] uppercase tracking-widest flex-1">Verification</span>
+                            <button
+                              onClick={async () => {
+                                try {
+                                  const updated = await ApiService.updateUserStatus(viewingUser.id, viewingUser.status, !viewingUser.verified);
+                                  setViewingUser(updated);
+                                  setPlatformUsers((prev: any[]) => prev.map((u: any) => u.id === updated.id ? updated : u));
+                                } catch (e) { alert("Verification toggle failed"); }
+                              }}
+                              className={cn(
+                                "px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all",
+                                viewingUser.verified ? "bg-emerald-600/20 text-emerald-400" : "bg-amber-600/20 text-amber-400"
+                              )}
+                            >
+                              {viewingUser.verified ? 'Verified' : 'Unverified'}
+                            </button>
+                          </div>
                         </div>
                       </div>
 
@@ -1291,12 +1404,17 @@ const AdminView = ({
                         </div>
                         <div className="p-5 rounded-2xl bg-[var(--panel-bg)] border border-[var(--panel-border)]">
                           <span className="text-[8px] font-black text-[var(--text-secondary)] uppercase tracking-widest block mb-1">Account State</span>
-                          <span className="text-sm font-black text-emerald-500 uppercase tracking-widest">{viewingUser.status}</span>
+                          <span className={cn(
+                            "text-sm font-black uppercase tracking-widest",
+                            viewingUser.status === 'Active' ? 'text-emerald-500' :
+                            viewingUser.status === 'Suspended' ? 'text-rose-500' :
+                            'text-amber-500'
+                          )}>{viewingUser.status}</span>
                         </div>
-                        {viewingUser.registeredAt && (
+                        {viewingUser.joined && (
                           <div className="col-span-2 p-5 rounded-2xl bg-[var(--panel-bg)]/50 border border-[var(--panel-border)]">
                             <span className="text-[8px] font-black text-[var(--text-secondary)] uppercase tracking-widest block mb-1">Registration Protocol Executed</span>
-                            <span className="text-[10px] font-mono text-[var(--text-secondary)] uppercase">{viewingUser.registeredAt}</span>
+                            <span className="text-[10px] font-mono text-[var(--text-secondary)] uppercase">{viewingUser.joined}</span>
                           </div>
                         )}
                       </div>
@@ -1398,6 +1516,30 @@ const AdminView = ({
                   </button>
                 ))}
               </div>
+
+              {/* Speed Rate Slider */}
+              <div className="space-y-2 border-t border-[var(--panel-border)] pt-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[8px] font-black text-[var(--text-secondary)] uppercase tracking-widest">Speed Rate (%/min)</span>
+                  <span className="text-[10px] font-black text-indigo-400 font-mono">{asset.trendRate || 2}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.1"
+                  max="20"
+                  step="0.1"
+                  value={asset.trendRate || 2}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value);
+                    handleSetTrend(asset.id, asset.trend || 'RANDOM', val);
+                  }}
+                  className="w-full h-2 bg-[var(--background)] rounded-full appearance-none cursor-pointer accent-indigo-600"
+                />
+                <div className="flex justify-between text-[7px] text-zinc-600 font-bold uppercase tracking-wider">
+                  <span>Slow 0.1%</span>
+                  <span>Fast 20%</span>
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -1406,16 +1548,23 @@ const AdminView = ({
           <div className="lg:col-span-1 flex flex-col gap-6">
             <div className="glass-panel rounded-3xl overflow-hidden flex flex-col bg-[var(--panel-bg)]">
               <div className="p-5 border-b border-[var(--panel-border)] bg-[var(--background)]/50">
-                <h3 className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">Active Channels</h3>
+                <h3 className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">Active Channels ({messages.length})</h3>
               </div>
               <div className="flex-1 p-2 space-y-1">
-                <div className="p-4 rounded-2xl bg-indigo-600/10 border border-indigo-600/20 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-black text-xs">U</div>
-                  <div className="flex flex-col">
-                    <span className="text-xs font-black text-[var(--text-primary)]">Default User Channel</span>
-                    <span className="text-[9px] text-emerald-500 font-bold uppercase">Online</span>
+                {Array.from(new Set(messages.filter(m => m.sender !== 'admin').map(m => m.userName || 'Unknown'))).map((uname) => (
+                  <div key={uname} className="p-4 rounded-2xl bg-indigo-600/10 border border-indigo-600/20 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-black text-xs">
+                      {uname.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-black text-[var(--text-primary)]">{uname}</span>
+                      <span className="text-[9px] text-emerald-500 font-bold uppercase">Online</span>
+                    </div>
                   </div>
-                </div>
+                ))}
+                {messages.filter(m => m.sender !== 'admin').length === 0 && (
+                  <div className="p-4 text-center text-[10px] text-zinc-500 font-bold uppercase">No active user channels</div>
+                )}
               </div>
             </div>
 
@@ -1481,18 +1630,18 @@ const AdminView = ({
 
             <div className="p-6 bg-[var(--background)]/50 border-t border-[var(--panel-border)]">
               <div className="flex gap-4">
-                <input
-                  type="text"
-                  placeholder="Dispatch response..."
-                  value={adminReplyText}
-                  onChange={(e) => setAdminReplyText(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') { onReply(adminReplyText); setAdminReplyText(''); } }}
-                  className="flex-1 bg-[var(--background)] border border-[var(--panel-border)] rounded-2xl px-6 py-4 text-xs font-bold text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-indigo-600 shadow-inner"
-                />
-                <button
-                  onClick={() => { onReply(adminReplyText); setAdminReplyText(''); }}
-                  className="px-8 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-xl shadow-indigo-600/20"
-                >
+                  <input
+                    type="text"
+                    placeholder="Dispatch response..."
+                    value={adminReplyText}
+                    onChange={(e) => setAdminReplyText(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { onReply(adminReplyText); setAdminReplyText(''); } }}
+                    className="flex-1 bg-[var(--background)] border border-[var(--panel-border)] rounded-2xl px-6 py-4 text-xs font-bold text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-indigo-600 shadow-inner"
+                  />
+                  <button
+                    onClick={async () => { await onReply(adminReplyText); setAdminReplyText(''); }}
+                    className="px-8 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-indigo-700 transition-all flex items-center gap-2 shadow-xl shadow-indigo-600/20"
+                  >
                   <Send className="w-4 h-4" />
                   Transmit
                 </button>
@@ -1748,10 +1897,21 @@ const AdminView = ({
 const ProfileView = ({ user, setUser }: { user: UserState, setUser: React.Dispatch<React.SetStateAction<UserState>> }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(user.name);
+  const [editedPhone, setEditedPhone] = useState(user.phone || '');
+  const [editedCountry, setEditedCountry] = useState(user.country || '');
+  const [profileSaved, setProfileSaved] = useState(false);
 
-  const handleSave = () => {
-    setUser(prev => ({ ...prev, name: editedName }));
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      const updated = await ApiService.updateProfile({ name: editedName, phone: editedPhone, country: editedCountry });
+      setUser(prev => ({ ...prev, name: updated.name, phone: updated.phone, country: updated.country }));
+      setIsEditing(false);
+      setProfileSaved(true);
+      setTimeout(() => setProfileSaved(false), 3000);
+    } catch {
+      setUser(prev => ({ ...prev, name: editedName, phone: editedPhone, country: editedCountry }));
+      setIsEditing(false);
+    }
   };
 
   const initials = user.name
@@ -1788,10 +1948,31 @@ const ProfileView = ({ user, setUser }: { user: UserState, setUser: React.Dispat
                 onChange={(e) => setEditedName(e.target.value)}
                 className="text-4xl md:text-5xl font-black text-[var(--text-primary)] italic tracking-tighter uppercase bg-transparent border-b border-indigo-500 max-w-full focus:outline-none"
               />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Phone</label>
+                  <input
+                    value={editedPhone}
+                    onChange={(e) => setEditedPhone(e.target.value)}
+                    className="w-full bg-[var(--background)] border border-[var(--panel-border)] rounded-xl px-4 py-3 text-xs font-bold text-[var(--text-primary)] focus:outline-none"
+                    placeholder="+1 (555) 000-0000"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">Country</label>
+                  <input
+                    value={editedCountry}
+                    onChange={(e) => setEditedCountry(e.target.value)}
+                    className="w-full bg-[var(--background)] border border-[var(--panel-border)] rounded-xl px-4 py-3 text-xs font-bold text-[var(--text-primary)] focus:outline-none"
+                    placeholder="United States"
+                  />
+                </div>
+              </div>
               <div className="flex gap-2 justify-center md:justify-start">
                 <button onClick={handleSave} className="px-6 py-2 bg-indigo-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-indigo-500 transition-all">Save Changes</button>
-                <button onClick={() => setIsEditing(false)} className="px-6 py-2 bg-[var(--panel-border)] text-[var(--text-secondary)] rounded-xl text-xs font-black uppercase tracking-widest hover:text-[var(--text-primary)] transition-all">Cancel</button>
+                <button onClick={() => { setIsEditing(false); setEditedName(user.name); setEditedPhone(user.phone || ''); setEditedCountry(user.country || ''); }} className="px-6 py-2 bg-[var(--panel-border)] text-[var(--text-secondary)] rounded-xl text-xs font-black uppercase tracking-widest hover:text-[var(--text-primary)] transition-all">Cancel</button>
               </div>
+              {profileSaved && <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Profile saved successfully</span>}
             </div>
           ) : (
             <>
@@ -1805,6 +1986,10 @@ const ProfileView = ({ user, setUser }: { user: UserState, setUser: React.Dispat
                 <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                   <Globe className="w-4 h-4" />
                   <span className="text-xs font-bold uppercase tracking-widest">{user.country || 'N/A'}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                  <Phone className="w-4 h-4" />
+                  <span className="text-xs font-bold uppercase tracking-widest">{user.phone || 'N/A'}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                   <Clock className="w-4 h-4" />
@@ -1900,7 +2085,7 @@ const ProfileView = ({ user, setUser }: { user: UserState, setUser: React.Dispat
 // --- View: Account ---
 
 const AccountView = ({ user, setUser, paymentSettings }: { user: UserState, setUser: React.Dispatch<React.SetStateAction<UserState>>, paymentSettings: any }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'deposit' | 'withdraw' | 'security'>('deposit');
+  const [activeSubTab, setActiveSubTab] = useState<'deposit' | 'withdraw' | 'security' | 'account'>('deposit');
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [selectedWithdrawMethod, setSelectedWithdrawMethod] = useState<string | null>(null);
   const [withdrawAmount, setWithdrawAmount] = useState('');
@@ -1917,7 +2102,7 @@ const AccountView = ({ user, setUser, paymentSettings }: { user: UserState, setU
         <div className="space-y-6">
           <div className="glass-panel p-6 rounded-3xl mb-6">
             <div className="flex bg-[var(--background)] p-1 rounded-2xl border border-[var(--panel-border)] mb-6 shadow-inner">
-              {(['deposit', 'withdraw', 'security'] as const).map((tab) => (
+              {(['deposit', 'withdraw', 'account', 'security'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveSubTab(tab)}
@@ -1931,7 +2116,21 @@ const AccountView = ({ user, setUser, paymentSettings }: { user: UserState, setU
               ))}
             </div>
 
-            <div className="space-y-4">
+            {/* Account Summary Card */}
+            <div className="p-5 rounded-3xl bg-gradient-to-br from-indigo-600/20 to-transparent border border-indigo-600/20 mb-4">
+              <div className="flex flex-col gap-2">
+                <span className="text-[8px] font-black text-indigo-400 uppercase tracking-widest">Account Tier</span>
+                <span className="text-sm font-black text-white uppercase tracking-widest">Premium Trader</span>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="flex-1 h-1.5 bg-[var(--background)] rounded-full overflow-hidden">
+                    <div className="h-full w-3/4 bg-gradient-to-r from-indigo-500 to-emerald-500 rounded-full" />
+                  </div>
+                  <span className="text-[8px] font-black text-emerald-400">Gold</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
               <div className="p-4 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] group hover:border-indigo-600/50 transition-all cursor-pointer shadow-sm">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-indigo-600/10 flex items-center justify-center">
@@ -1939,7 +2138,7 @@ const AccountView = ({ user, setUser, paymentSettings }: { user: UserState, setU
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[10px] text-indigo-400 font-black uppercase tracking-widest">Verification</span>
-                    <span className="text-sm font-bold text-[var(--text-primary)]">Identity Verified</span>
+                    <span className={cn("text-sm font-bold", user.verified ? "text-emerald-500" : "text-amber-500")}>{user.verified ? 'Identity Verified' : 'Verification Pending'}</span>
                   </div>
                 </div>
               </div>
@@ -1949,8 +2148,30 @@ const AccountView = ({ user, setUser, paymentSettings }: { user: UserState, setU
                     <Zap className="w-5 h-5 text-emerald-500" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[10px] text-emerald-400 font-black uppercase tracking-widest">Speed</span>
-                    <span className="text-sm font-bold text-[var(--text-primary)]">Instant Processing</span>
+                    <span className="text-[10px] text-emerald-400 font-black uppercase tracking-widest">Execution</span>
+                    <span className="text-sm font-bold text-[var(--text-primary)]">Instant Execution</span>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                    <BarChart3 className="w-5 h-5 text-amber-500" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-amber-400 font-black uppercase tracking-widest">Leverage</span>
+                    <span className="text-sm font-bold text-[var(--text-primary)]">1:100</span>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center">
+                    <Activity className="w-5 h-5 text-rose-500" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-rose-400 font-black uppercase tracking-widest">Total Trades</span>
+                    <span className="text-sm font-bold text-[var(--text-primary)]">{(user.trades || []).length} Orders</span>
                   </div>
                 </div>
               </div>
@@ -1959,7 +2180,7 @@ const AccountView = ({ user, setUser, paymentSettings }: { user: UserState, setU
 
           <div className="glass-panel p-6 rounded-3xl border-rose-500/10">
             <h4 className="text-rose-400 font-black uppercase tracking-widest text-[10px] mb-2">Notice</h4>
-            <p className="text-zinc-500 text-[10px] leading-relaxed">External fees may apply depending on your selected processing gateway. Withdrawal processing times may vary.</p>
+            <p className="text-zinc-500 text-[10px] leading-relaxed">Trading CFDs involves significant risk. 74-89% of retail investor accounts lose money. Ensure you understand the risks.</p>
           </div>
         </div>
 
@@ -2222,6 +2443,150 @@ const AccountView = ({ user, setUser, paymentSettings }: { user: UserState, setU
               )}
             </div>
           )}
+
+          {activeSubTab === 'account' && (
+            <div className="glass-panel p-6 md:p-8 rounded-3xl space-y-6 md:space-y-8 animate-in fade-in duration-500">
+              <div className="space-y-2">
+                <h3 className="text-lg md:text-xl font-black text-[var(--text-primary)] tracking-widest uppercase">Account Details</h3>
+                <p className="text-[var(--text-secondary)] text-[10px] md:text-xs font-bold uppercase tracking-tighter">Your trading account configuration and limits.</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] space-y-3">
+                  <span className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">Account ID</span>
+                  <span className="text-sm font-mono font-black text-[var(--text-primary)]">{user.id || '—'}</span>
+                </div>
+                <div className="p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] space-y-3">
+                  <span className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">Account Type</span>
+                  <span className="text-sm font-black text-indigo-400 uppercase tracking-widest">Premium</span>
+                </div>
+                <div className="p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] space-y-3">
+                  <span className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">Leverage</span>
+                  <span className="text-sm font-black text-amber-400">1:100</span>
+                </div>
+                <div className="p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] space-y-3">
+                  <span className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">Base Currency</span>
+                  <span className="text-sm font-black text-[var(--text-primary)]">USD</span>
+                </div>
+                <div className="p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] space-y-3">
+                  <span className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">Margin Call Level</span>
+                  <span className="text-sm font-black text-rose-400">100%</span>
+                </div>
+                <div className="p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] space-y-3">
+                  <span className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">Stop Out Level</span>
+                  <span className="text-sm font-black text-rose-500">50%</span>
+                </div>
+                <div className="p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] space-y-3">
+                  <span className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">Commission</span>
+                  <span className="text-sm font-black text-[var(--text-primary)]">$3.5 per lot</span>
+                </div>
+                <div className="p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] space-y-3">
+                  <span className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">Max Open Positions</span>
+                  <span className="text-sm font-black text-[var(--text-primary)]">50</span>
+                </div>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-gradient-to-br from-indigo-600/10 to-transparent border border-indigo-600/20 space-y-4">
+                <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Trading Conditions</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[10px]">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-zinc-500 font-bold uppercase">Min Deposit</span>
+                    <span className="text-[var(--text-primary)] font-black">$10</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-zinc-500 font-bold uppercase">Max Leverage</span>
+                    <span className="text-[var(--text-primary)] font-black">1:500</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-zinc-500 font-bold uppercase">Spread Type</span>
+                    <span className="text-[var(--text-primary)] font-black">Variable</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeSubTab === 'security' && (
+            <div className="glass-panel p-6 md:p-8 rounded-3xl space-y-6 md:space-y-8 animate-in fade-in duration-500">
+              <div className="space-y-2">
+                <h3 className="text-lg md:text-xl font-black text-[var(--text-primary)] tracking-widest uppercase">Security Settings</h3>
+                <p className="text-[var(--text-secondary)] text-[10px] md:text-xs font-bold uppercase tracking-tighter">Manage your account security and access controls.</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)]">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">Two-Factor Authentication</span>
+                    <span className="text-[8px] text-zinc-500 font-bold uppercase">Protect your account with 2FA</span>
+                  </div>
+                  <button className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-indigo-500 transition-all">
+                    Enable
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)]">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">Change Password</span>
+                    <span className="text-[8px] text-zinc-500 font-bold uppercase">Update your login credentials</span>
+                  </div>
+                  <button className="px-6 py-2.5 bg-[var(--panel-border)] text-[var(--text-secondary)] rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-zinc-600 transition-all">
+                    Update
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)]">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">Session Management</span>
+                    <span className="text-[8px] text-zinc-500 font-bold uppercase">View active sessions and devices</span>
+                  </div>
+                  <button className="px-6 py-2.5 bg-[var(--panel-border)] text-[var(--text-secondary)] rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-zinc-600 transition-all">
+                    Review
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)]">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">IP Whitelisting</span>
+                    <span className="text-[8px] text-zinc-500 font-bold uppercase">Restrict access to trusted IPs</span>
+                  </div>
+                  <button className="px-6 py-2.5 bg-emerald-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-emerald-500 transition-all">
+                    Active
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)]">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black text-[var(--text-primary)] uppercase tracking-widest">KYC Documents</span>
+                    <span className="text-[8px] text-zinc-500 font-bold uppercase">Upload verification documents</span>
+                  </div>
+                  <button className="px-6 py-2.5 bg-amber-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-amber-500 transition-all">
+                    Upload
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-rose-600/5 border border-rose-600/10">
+                <h4 className="text-[10px] font-black text-rose-400 uppercase tracking-widest mb-4">Recent Login Activity</h4>
+                <div className="space-y-3">
+                  {[
+                    { device: 'Chrome / Windows', location: 'New York, US', time: '2 minutes ago', ip: '192.168.1.1' },
+                    { device: 'Safari / macOS', location: 'London, UK', time: 'Yesterday at 14:32', ip: '10.0.0.1' },
+                  ].map((session, i) => (
+                    <div key={i} className="flex flex-col gap-1 p-3 rounded-xl bg-[var(--background)] border border-[var(--panel-border)]">
+                      <div className="flex justify-between">
+                        <span className="text-[10px] font-bold text-[var(--text-primary)]">{session.device}</span>
+                        <span className="text-[8px] text-zinc-500 font-mono">{session.ip}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-[8px] text-zinc-500">{session.location}</span>
+                        <span className="text-[8px] text-zinc-600">{session.time}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -2269,9 +2634,21 @@ export default function App() {
   const [selectedAssetId, setSelectedAssetId] = useState<string>('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [messages, setMessages] = useState<any[]>([
-    { id: 1, sender: 'system', text: 'Protocol established. How can we assist your operations today?', time: '09:00', userName: 'System', userId: 'sys' }
-  ]);
+  const [messages, setMessages] = useState<any[]>([]);
+
+  // Load messages from server on mount
+  React.useEffect(() => {
+    if (!isAuthenticated) return;
+    ApiService.getMessages().then(msgs => {
+      setMessages(msgs.length > 0 ? msgs : [
+        { id: 1, sender: 'system', text: 'Protocol established. How can we assist your operations today?', time: '09:00', userName: 'System', userId: 'sys' }
+      ]);
+    }).catch(() => {
+      setMessages([
+        { id: 1, sender: 'system', text: 'Protocol established. How can we assist your operations today?', time: '09:00', userName: 'System', userId: 'sys' }
+      ]);
+    });
+  }, [isAuthenticated]);
 
   const selectedAsset = (assets.find(a => a.id === selectedAssetId) || assets[0]) || null;
 
@@ -2359,7 +2736,7 @@ export default function App() {
 
       const openTrades = Array.isArray(updatedTrades) ? updatedTrades.filter(t => t.status === 'OPEN') : [];
       const totalProfit = openTrades.reduce((sum, t) => sum + (t.profit || 0), 0);
-      const equity = (prevUser.balance || 0) + totalProfit;
+      const equity = Math.max(0, (prevUser.balance || 0) + totalProfit);
       const margin = openTrades.reduce((sum, t) => {
         // Simple margin calculation: 1% for FX, 2% for commodities/crypto
         const rate = t.symbol.includes('/') ? 0.002 : 0.01;
@@ -2417,7 +2794,7 @@ export default function App() {
 
       return {
         ...prev,
-        balance: prev.balance + trade.profit,
+        balance: Math.max(0, prev.balance + trade.profit),
         trades: updatedTrades
       };
     });
@@ -2427,17 +2804,23 @@ export default function App() {
     setUser(prev => ({ ...prev, avatar: url }));
   };
 
-  const handleSendMessage = (text: string, sender: 'user' | 'admin' = 'user') => {
+  const handleSendMessage = async (text: string, sender: 'user' | 'admin' = 'user') => {
     if (!text.trim()) return;
-    const newMessage = {
-      id: Date.now(),
-      sender,
-      text,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      userName: user.name,
-      userId: user.id
-    };
-    setMessages(prev => [...prev, newMessage]);
+    try {
+      const savedMsg = await ApiService.sendMessage(text, sender);
+      setMessages(prev => [...prev, savedMsg]);
+    } catch {
+      // Fallback: add locally
+      const newMessage = {
+        id: Date.now(),
+        sender,
+        text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        userName: user.name,
+        userId: user.id
+      };
+      setMessages(prev => [...prev, newMessage]);
+    }
   };
 
   const handleAuth = async (data: { name?: string, email: string, isRegistration: boolean, bonusClaimed?: boolean, user?: any }) => {
@@ -2625,7 +3008,7 @@ export default function App() {
         messages={messages}
         paymentSettings={paymentSettings}
         onSendMessage={async (txt) => {
-          handleSendMessage(txt);
+          await handleSendMessage(txt);
           setTimeout(() => {
             handleSendMessage("Analysis: Data stream acknowledged. Your protocol has been validated by our intelligence node.", 'admin');
           }, 1000);

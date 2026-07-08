@@ -93,11 +93,11 @@ export class ApiService {
     return res.json();
   }
 
-  static async setTrend(assetId: string, trend: string) {
+  static async setTrend(assetId: string, trend: string, trendRate?: number) {
     const res = await fetch(`${API_BASE}/admin/set-trend`, {
       method: "POST",
       headers: this.headers,
-      body: JSON.stringify({ assetId, trend }),
+      body: JSON.stringify({ assetId, trend, trendRate }),
     });
     return res.json();
   }
@@ -108,5 +108,39 @@ export class ApiService {
       headers: this.headers
     });
     return this.handleResponse(res);
+  }
+
+  static async getMessages() {
+    const res = await fetch(`${API_BASE}/messages`, { headers: this.headers });
+    if (!res.ok) return [];
+    return res.json();
+  }
+
+  static async sendMessage(text: string, sender: string = 'user') {
+    const res = await fetch(`${API_BASE}/messages/send`, {
+      method: "POST",
+      headers: this.headers,
+      body: JSON.stringify({ text, sender }),
+    });
+    if (!res.ok) throw new Error("Failed to send message");
+    return res.json();
+  }
+
+  static async updateUserStatus(userId: string, status: string, verified?: boolean) {
+    const res = await fetch(`${API_BASE}/admin/update-user-status`, {
+      method: "POST",
+      headers: this.headers,
+      body: JSON.stringify({ userId, status, verified }),
+    });
+    return res.json();
+  }
+
+  static async updateProfile(data: { name?: string; phone?: string; country?: string }) {
+    const res = await fetch(`${API_BASE}/user/update-profile`, {
+      method: "POST",
+      headers: this.headers,
+      body: JSON.stringify(data),
+    });
+    return res.json();
   }
 }

@@ -58,11 +58,11 @@ async function startServer() {
   let serverUsers = savedData ? savedData.users : defaultUsers;
 
   let serverAssets = [
-    { id: 'eurusd', name: 'EUR/USD', symbol: 'EUR/USD', price: 1.0824, change24h: 0.15, sparkline: [], trend: 'RANDOM' },
-    { id: 'gbpusd', name: 'GBP/USD', symbol: 'GBP/USD', price: 1.2654, change24h: -0.22, sparkline: [], trend: 'RANDOM' },
-    { id: 'usdjpy', name: 'USD/JPY', symbol: 'USD/JPY', price: 151.42, change24h: 0.45, sparkline: [], trend: 'RANDOM' },
-    { id: 'xauusd', name: 'Gold', symbol: 'GOLD', price: 2355.20, change24h: 1.12, sparkline: [], trend: 'RANDOM' },
-    { id: 'btcusd', name: 'Bitcoin', symbol: 'BTC/USD', price: 64250.00, change24h: -2.45, sparkline: [], trend: 'RANDOM' },
+    { id: 'eurusd', name: 'EUR/USD', symbol: 'EUR/USD', price: 1.0824, change24h: 0.15, sparkline: [], trend: 'RANDOM', trendRate: 2 },
+    { id: 'gbpusd', name: 'GBP/USD', symbol: 'GBP/USD', price: 1.2654, change24h: -0.22, sparkline: [], trend: 'RANDOM', trendRate: 2 },
+    { id: 'usdjpy', name: 'USD/JPY', symbol: 'USD/JPY', price: 151.42, change24h: 0.45, sparkline: [], trend: 'RANDOM', trendRate: 2 },
+    { id: 'xauusd', name: 'Gold', symbol: 'GOLD', price: 2355.20, change24h: 1.12, sparkline: [], trend: 'RANDOM', trendRate: 2 },
+    { id: 'btcusd', name: 'Bitcoin', symbol: 'BTC/USD', price: 64250.00, change24h: -2.45, sparkline: [], trend: 'RANDOM', trendRate: 2 },
   ];
 
   const defaultPaymentSettings = {
@@ -230,18 +230,63 @@ async function startServer() {
     const userIdx = serverUsers.findIndex(u => u.id === userId);
     if (userIdx === -1) return res.status(404).json({ error: "User not found" });
     
-    serverUsers[userIdx].balance += amount;
+    serverUsers[userIdx].balance = Math.max(0, serverUsers[userIdx].balance + amount);
     saveData(serverUsers);
     res.json(serverUsers[userIdx]);
   });
 
   app.post("/api/admin/set-trend", authMiddleware, adminMiddleware, (req, res) => {
-    const { assetId, trend } = req.body;
+    const { assetId, trend, trendRate } = req.body;
     const assetIdx = serverAssets.findIndex(a => a.id === assetId);
     if (assetIdx === -1) return res.status(404).json({ error: "Asset not found" });
     
     serverAssets[assetIdx].trend = trend;
+    if (trendRate !== undefined) serverAssets[assetIdx].trendRate = trendRate;
     res.json(serverAssets[assetIdx]);
+  });
+
+  // Message persistence for CS
+  let serverMessages: any[] = [];
+
+  app.get("/api/messages", authMiddleware, (req: any, res) => {
+    res.json(serverMessages);
+  });
+
+  app.post("/api/messages/send", authMiddleware, (req: any, res) => {
+    const { text, sender } = req.body;
+    const newMsg = {
+      id: Date.now(),
+      sender: sender || 'user',
+      text,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      userName: req.user.name,
+      userId: req.user.id
+    };
+    serverMessages.push(newMsg);
+    res.json(newMsg);
+  });
+
+  app.post("/api/admin/update-user-status", authMiddleware, adminMiddleware, (req, res) => {
+    const { userId, status, verified } = req.body;
+    const userIdx = serverUsers.findIndex(u => u.id === userId);
+    if (userIdx === -1) return res.status(404).json({ error: "User not found" });
+    
+    if (status) serverUsers[userIdx].status = status;
+    if (verified !== undefined) serverUsers[userIdx].verified = verified;
+    saveData(serverUsers);
+    res.json(serverUsers[userIdx]);
+  });
+
+  app.post("/api/user/update-profile", authMiddleware, (req: any, res) => {
+    const { name, phone, country } = req.body;
+    const userIdx = serverUsers.findIndex(u => u.id === req.user.id);
+    if (userIdx === -1) return res.status(404).json({ error: "User not found" });
+    
+    if (name) serverUsers[userIdx].name = name;
+    if (phone !== undefined) serverUsers[userIdx].phone = phone;
+    if (country !== undefined) serverUsers[userIdx].country = country;
+    saveData(serverUsers);
+    res.json(serverUsers[userIdx]);
   });
 
   // Simulation loop on server
@@ -251,12 +296,17 @@ async function startServer() {
         const defaultVolatility = isVolatile ? 0.002 : 0.0004;
         
         const open = asset.price;
+        const rate = asset.trendRate || 2; // percent per minute, default 2%
+        // Convert rate from % per minute to per-interval (2s = 1/30 of a minute)
+        const intervalFraction = 2000 / 60000; // 2s / 60s = 0.0333
+        const ratePerInterval = (rate / 100) * intervalFraction;
+
         let bias = 0;
-        if (asset.trend === 'PUMP') bias = defaultVolatility * 8; // Much stronger bias
-        if (asset.trend === 'DUMP') bias = -defaultVolatility * 8;
+        if (asset.trend === 'PUMP') bias = ratePerInterval;
+        if (asset.trend === 'DUMP') bias = -ratePerInterval;
         if (asset.trend === 'STABLE') bias = (Math.random() - 0.5) * (defaultVolatility * 0.1); 
 
-        const changePercent = ((Math.random() - 0.5) * defaultVolatility) + bias;
+        const changePercent = ((Math.random() - 0.5) * defaultVolatility * 0.3) + bias;
         const close = open * (1 + changePercent);
         
         // Generate realistic High/Low
