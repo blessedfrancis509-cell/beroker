@@ -416,7 +416,7 @@ const DashboardView = ({ setActiveTab, user, assets, onCloseTrade }: {
 
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         <div className="xl:col-span-3 space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">            {[
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">            {[
             { label: 'Primary Balance', value: user.balance, sub: 'USD Liquid', color: 'text-[var(--text-primary)]' },
             { label: 'Active Exposure', value: user.balance * 0.4, sub: 'Margin in Use', color: 'text-indigo-400' },
             { label: 'Free Margin', value: user.freeMargin, sub: 'Available Leverage', color: 'text-emerald-400' }
@@ -891,8 +891,8 @@ const NewsView = () => {
         <span className="terminal-label">Intelligence Stream</span>
         <h2 className="text-2xl font-black text-[var(--text-primary)] italic uppercase tracking-tighter">Market <span className="text-indigo-500">Intelligence</span></h2>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-8">
+        <div className="lg:col-span-2 space-y-3 md:space-y-4">
           {news.map((item) => (
             <div key={item.id} onClick={() => setSelectedArticle(item)} className="glass-panel p-6 rounded-3xl hover:bg-indigo-600/5 transition-all border group cursor-pointer">
               <div className="flex justify-between items-start mb-4">
@@ -1162,7 +1162,7 @@ const AdminView = ({
   };
 
   return (
-    <div className="h-full flex flex-col gap-6 animate-in zoom-in-95 duration-500 pb-24">
+    <div className="h-full flex flex-col gap-6 animate-in zoom-in-95 duration-500 pb-24 px-3 md:px-6 min-w-0 max-w-full">
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 pb-2 border-b border-white/5">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 rounded-xl bg-indigo-600/10 border border-indigo-600/20 flex items-center justify-center">
@@ -1198,7 +1198,7 @@ const AdminView = ({
 
       {adminSubTab === 'monitor' && (
         <div className="space-y-6 animate-in fade-in duration-500">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {[
               { label: 'Total Volume Index', value: '$0.00', icon: BarChart3, color: 'text-indigo-400' },
               { label: 'Network Operators', value: platformUsers.length, icon: Activity, color: 'text-emerald-400' },
@@ -1257,8 +1257,8 @@ const AdminView = ({
               />
             </div>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm whitespace-nowrap">
+          <div className="overflow-x-auto no-scrollbar">
+            <table className="w-full text-left text-sm whitespace-nowrap min-w-[600px]">
               <thead className="text-[9px] text-[var(--text-secondary)] uppercase font-black tracking-widest border-b border-[var(--panel-border)] bg-[var(--panel-bg)]">
                 <tr>
                   <th className="px-6 py-5">User Designation</th>
@@ -1478,7 +1478,7 @@ const AdminView = ({
       )}
 
       {adminSubTab === 'markets' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-in slide-in-from-left duration-500">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4 animate-in slide-in-from-left duration-500 min-w-0 max-w-full">
           {assets.map((asset) => (
             <div key={asset.id} className="glass-panel p-6 rounded-[2rem] bg-[var(--panel-bg)]/20 border-[var(--panel-border)] flex flex-col gap-5 hover:border-indigo-600/30 transition-all">
               <div className="flex items-center justify-between">
@@ -1544,7 +1544,7 @@ const AdminView = ({
           ))}
         </div>
       )}            {adminSubTab === 'cs' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in slide-in-from-right duration-500">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-6 animate-in slide-in-from-right duration-500 min-w-0 max-w-full">
           <div className="lg:col-span-1 flex flex-col gap-6">
             <div className="glass-panel rounded-3xl overflow-hidden flex flex-col bg-[var(--panel-bg)]">
               <div className="p-5 border-b border-[var(--panel-border)] bg-[var(--background)]/50">
@@ -1602,7 +1602,7 @@ const AdminView = ({
 
           </div>
 
-          <div className="lg:col-span-2 glass-panel rounded-[2.5rem] overflow-hidden flex flex-col h-[600px] bg-[var(--panel-bg)]">
+          <div className="lg:col-span-2 glass-panel rounded-[2.5rem] overflow-hidden flex flex-col h-[400px] md:h-[600px] bg-[var(--panel-bg)]">
             <div className="p-6 border-b border-[var(--panel-border)] bg-[var(--background)]/30 flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <MessageSquare className="w-5 h-5 text-indigo-500" />
@@ -1652,7 +1652,7 @@ const AdminView = ({
       )}
 
       {adminSubTab === 'config' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in zoom-in-95 duration-500">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6 animate-in zoom-in-95 duration-500 min-w-0 max-w-full">
           {/* Crypto & E-Wallets */}
           <div className="space-y-6">
             <div className="glass-panel p-8 rounded-[2.5rem] bg-[var(--panel-bg)] border-[var(--panel-border)] space-y-8 h-fit">
@@ -2002,7 +2002,7 @@ const ProfileView = ({ user, setUser }: { user: UserState, setUser: React.Dispat
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
         <div className="terminal-panel p-6 rounded-3xl space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="terminal-label">Account Summary</h3>
@@ -2091,13 +2091,13 @@ const AccountView = ({ user, setUser, paymentSettings }: { user: UserState, setU
   const [withdrawAmount, setWithdrawAmount] = useState('');
 
   return (
-    <div className="h-full flex flex-col min-h-0 bg-[var(--background)] animate-in fade-in duration-700 p-8 overflow-y-auto custom-scrollbar pb-32">
+    <div className="h-full flex flex-col min-h-0 bg-[var(--background)] animate-in fade-in duration-700 p-3 md:p-8 overflow-y-auto custom-scrollbar pb-32">
       <div className="mb-8">
         <span className="terminal-label">Financial Services Matrix</span>
         <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter">Financial <span className="text-indigo-500">Terminal</span></h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-8">
         {/* Left: Navigation & Profile Info */}
         <div className="space-y-6">
           <div className="glass-panel p-6 rounded-3xl mb-6">
@@ -2220,7 +2220,7 @@ const AccountView = ({ user, setUser, paymentSettings }: { user: UserState, setU
                     <p className="text-[var(--text-secondary)] text-[10px] md:text-xs font-bold uppercase tracking-tighter">Funds are credited instantly to your operational ledger.</p>
                   </div>
 
-                  <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 md:gap-4">
+                  <div className="grid grid-cols-2 gap-3 md:gap-4">
                     {[
                       { id: 'wire', label: 'Bank Wire', icon: Banknote, subtitle: 'SWIFT / SEPA' },
                       { id: 'crypto', label: 'Digital Assets', icon: TrendingUp, subtitle: 'BTC, ETH, USDT' },
@@ -2451,8 +2451,8 @@ const AccountView = ({ user, setUser, paymentSettings }: { user: UserState, setU
                 <p className="text-[var(--text-secondary)] text-[10px] md:text-xs font-bold uppercase tracking-tighter">Your trading account configuration and limits.</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                  <div className="p-5 rounded-2xl bg-[var(--background)] border border-[var(--panel-border)] space-y-3">
                   <span className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">Account ID</span>
                   <span className="text-sm font-mono font-black text-[var(--text-primary)]">{user.id || '—'}</span>
                 </div>
